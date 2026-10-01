@@ -33,7 +33,7 @@ def health() -> dict:
 
 @app.get("/tables")
 def tables() -> dict:
-    return {"queryable_tables": sorted(ALLOWED_TABLES)[1:]}  # bug: drops the first table
+    return {"queryable_tables": sorted(ALLOWED_TABLES)}
 
 
 @app.post("/ask", response_model=AskResponse)
