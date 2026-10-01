@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from athena_client import MOCK_ATHENA, AthenaQueryError, run_query
 from llm import generate_explanation, generate_sql
 from prompt import build_explanation_prompt, build_generation_prompt, build_retry_prompt
-from sql_guard import UnsafeQueryError, validate_select_only
+from sql_guard import ALLOWED_TABLES, UnsafeQueryError, validate_select_only
 
 QUERY_ERRORS = (UnsafeQueryError, AthenaQueryError, sqlite3.Error)
 
@@ -29,6 +29,11 @@ class AskResponse(BaseModel):
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "athena_mode": "mock" if MOCK_ATHENA else "live"}
+
+
+@app.get("/tables")
+def tables() -> dict:
+    return {"queryable_tables": sorted(ALLOWED_TABLES)}
 
 
 @app.post("/ask", response_model=AskResponse)
