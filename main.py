@@ -36,6 +36,12 @@ def tables() -> dict:
     return {"queryable_tables": sorted(ALLOWED_TABLES)}
 
 
+@app.get("/categories")
+def categories() -> dict:
+    rows = run_query("SELECT DISTINCT category FROM products ORDER BY category")
+    return {"categories": [row["category"] for row in rows]}
+
+
 @app.post("/ask", response_model=AskResponse)
 async def ask(payload: AskRequest) -> AskResponse:
     question = payload.question
